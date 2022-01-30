@@ -52,3 +52,5 @@ Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
 1.057   1.215   1.305   1.307   1.377   1.543 
 
 > plot(mtcars$wt, mtcars$mpg)
+
+
