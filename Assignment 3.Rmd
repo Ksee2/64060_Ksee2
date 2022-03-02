@@ -1,0 +1,94 @@
+---
+title: "Assignment_3"
+author: "Kyle See"
+date: "3/1/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+rm(list=ls())
+setwd(Users/kyle/Downloads)
+setwd("Users/kyle/Downloads")
+getwd()
+setwd("/Users/kyle/Downloads")
+bank = read.csv("UniversalBank.csv")
+bank$Personal.Loan = as.factor(bank$Personal.Loan)
+bank$Online = as.factor(bank$Online)
+bank$CreditCard = as.factor(bank$CreditCard)
+set.seed(1)
+train.index <- sample(row.names(bank), 0.6*dim(bank)[1])  
+test.index <- setdiff(row.names(bank), train.index) 
+train.df <- bank[train.index, ]
+test.df <- bank[test.index, ]
+train <- bank[train.index, ]
+test = bank[train.index,]
+
+melted.bank = melt(train,id=c("CreditCard","Personal.Loan"),variable= "Online")
+recast.bank=dcast(melted.bank,CreditCard+Personal.Loan~Online)
+recast.bank[,c(1:2,14)]
+
+> Probability of Loan acceptance given having a bank credit card and user of online services is 77/3000 = 2.6%
+
+melted.bankc1 = melt(train,id=c("Personal.Loan"),variable = "Online")
+melted.bankc2 = melt(train,id=c("CreditCard"),variable = "Online")
+
+> attributes for both tables are not the same in this case and thus they will be removed 
+
+recast.bankc1=dcast(melted.bankc1,Personal.Loan~Online)
+recast.bankc2=dcast(melted.bankc2,CreditCard~Online)
+Loanline=recast.bankc1[,c(1,13)]
+LoanCC = recast.bankc2[,c(1,14)]
+
+Loanline
+
+LoanCC
+
+table(train[,c(14,10)])
+
+table(train[,c(13,10)])
+
+table(train[,c(10)])
+
+> For Part D, i. 77/(77+198)=28%
+>  ii. 166/(166+109)= 60.3%
+>  iii. 275/(275+2725)=9.2%
+>  iv. 801/(801+1924)=29.4%
+>  v. 1588/(1588+1137) = 58.3%
+>  vi. 2725/(2725+275) = 90.8%
+
+> For Part E: 
+((77/(77+198))*(166/(166+109))*(275/(275+2725)))/(((77/(77+198))*(166/(166+109))*(275/(275+2725)))+((801/(801+1924))*(1588/(1588+1137))*2725/(2725+275)))
+
+> For Part F: comparing the value of .09055758 to 2.6%, we see that part F giving us a 9.0% is more accurate 
+
+> Moving into part G..
+
+naive.train = train.df[,c(10,13:14)]
+naive.test = test.df[,c(10,13:14)]
+naivebayes = naiveBayes(Personal.Loan~.,data=naive.train)
+naivebayes
+
+> we can see that the naive bayes produced the same output at 2.6% and 9% respectively. 
